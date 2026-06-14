@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Waterborne Disease Risk Prediction</title>
+   
+    <style>
+
+.footer{
+    text-align:center;
+    margin-top:20px;
+    font-size:14px;
+    color:white;
+    opacity:0.9;
+}
+
+.result-low{
+    color:#27ae60;
+    font-weight:bold;
+}
+
+.result-medium{
+    color:#f39c12;
+    font-weight:bold;
+}
+
+.result-high{
+    color:#e74c3c;
+    font-weight:bold;
+}
+
+body{
+    font-family:'Segoe UI', sans-serif;
+    background:linear-gradient(135deg,#00b4db,#0083b0);
+
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+
+    padding:30px;
+}
+
+.container{
+    width:75%;
+    max-width:1600px;
+    margin: 0 auto;
+
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(10px);
+
+    border-radius:20px;
+
+    padding:35px;     /* increase from 25px */
+    min-height:550px; /* add this */
+
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+.content-wrapper{
+    display:flex;
+    gap:20px;
+    align-items:flex-start;
+}
+
+form{
+    width:100%;
+}
+
+.left-panel{
+    flex:0 0 45%;
+}
+
+.right-panel{
+    flex:0 0 55%;
+}
+
+.right-panel .result{
+    margin-top:0;
+    width:75%;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:25px;
+    font-size:38px;
+}
+
+label{
+    font-weight:bold;
+    font-size:20px;
+}
+
+select,
+input[type="range"]{
+    width:100%;
+    margin-top:8px;
+    margin-bottom:18px;
+}
+
+select{
+    padding:10px;
+    border:none;
+    border-radius:10px;
+}
+
+input[type="range"]{
+    accent-color:#00e5ff;
+    width:100%;
+}
+
+.value{
+    font-size:20px;
+    margin:2px 0 4px 0;
+}
+
+button{
+    width:100%;
+    padding:15px;
+    background:#00e5ff;
+    border:none;
+    border-radius:12px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover{
+    transform:scale(1.03);
+    background:white;
+    color:#0083b0;
+    button:hover{
+    transform: translateY(-2px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+    }
+}
+
+.result{
+    margin-top:25px;
+    background:white;
+    color:#222;
+    padding:20px;
+    border-radius:15px;
+    animation: fadeIn 0.6s ease;
+    box-shadow:0 8px 20px rgba(0,0,0,0.15);
+    border:1px solid rgba(255,255,255,0.4);
+}
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.result h2{
+    color:#0083b0;
+}
+
+.result-low{
+    color:#27ae60 !important;
+    font-weight:bold;
+}
+
+.result-medium{
+    color:#f39c12 !important;
+    font-weight:bold;
+}
+
+.result-high{
+    color:#e74c3c !important;
+    font-weight:bold;
+}
+
+.risk-high{
+    background: linear-gradient(135deg,#ff4d4d,#e74c3c);
+    color:white;
+    padding:10px 20px;
+    border-radius:30px;
+    font-weight:bold;
+    display:inline-block;
+    margin-bottom:10px;
+    box-shadow:0 4px 15px rgba(231,76,60,0.4);
+}
+
+.risk-medium{
+    background: linear-gradient(135deg,#f1c40f,#f39c12);
+    color:white;
+    padding:10px 20px;
+    border-radius:30px;
+    font-weight:bold;
+    display:inline-block;
+    margin-bottom:10px;
+    box-shadow:0 4px 15px rgba(243,156,18,0.4);
+}
+
+.risk-low{
+    background: linear-gradient(135deg,#2ecc71,#27ae60);
+    color:white;
+    padding:10px 20px;
+    border-radius:30px;
+    font-weight:bold;
+    display:inline-block;
+    margin-bottom:10px;
+    box-shadow:0 4px 15px rgba(39,174,96,0.4);
+}
+
+.disease-box{
+    margin-top:10px;
+    background:#e8f7ff;
+    padding:15px;
+    border-radius:10px;
+    font-size:18px;
+}
+
+.timestamp{
+    color:#666;
+    font-size:13px;
+    margin-top:8px;
+    margin-bottom:15px;
+}
+
+.quality-box{
+    margin-top:15px;
+    background:#f5faff;
+    padding:15px;
+    border-radius:10px;
+    color:#222;
+}
+
+.quality-box h3{
+    color:#0083b0;
+    margin-bottom:10px;
+}
+
+.quality-box p{
+    margin:8px 0;
+    font-weight:500;
+}
+
+.recommendation-box{
+    margin-top:15px;
+    background:#fff8ec;
+    padding:15px;
+    border-radius:10px;
+    color:#222;
+}
+
+.recommendation-box h3{
+    color:#ff9800;
+    margin-bottom:10px;
+}
+
+.recommendation-box ul{
+    padding-left:20px;
+}
+
+.recommendation-box li{
+    margin-bottom:6px;
+}
+
+.badge{
+    text-align:center;
+    background:rgba(255,255,255,0.15);
+    padding:10px;
+    border-radius:20px;
+    margin:15px 0;
+    font-size:13px;
+    color:white;
+    font-weight:bold;
+}
+
+.footer{
+    text-align:center;
+    margin-top:20px;
+    font-size:14px;
+    opacity:0.9;
+}
+
+.button-group{
+    display:flex;
+    gap:10px;
+    margin-top:15px;
+}
+
+.button-group button{
+    flex:1;
+}
+
+.reset-btn{
+    background:#ff6b6b;
+    color:white;
+}
+
+.reset-btn:hover{
+    background:#ff5252;
+}
+
+.error-message{
+    color:red;
+    font-weight:bold;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>💧 AI Waterborne Disease Risk Prediction</h1>
+
+        <div class="badge">
+            AI-Powered Water Quality Risk Assessment System
+        </div>
+
+        <div class="content-wrapper">
+
+        <div class="left-panel">
+
+        <form action="/predict" method="POST">
+
+            <select name="type_water_body" required style="width:100%;
+                padding:10px;
+                margin-top:10px;
+                margin-bottom:10px;">
+                <option value="" selected>Select Water Body</option>
+                <option value="0"
+                {% if type_water_body == "0" %}selected{% endif %}>
+                LAKE
+                </option>
+                <option value="1"
+                {% if type_water_body == "1" %}selected{% endif %}>
+                POND
+                </option>
+                <option value="2"
+                {% if type_water_body == "2" %}selected{% endif %}>
+                TANK
+                </option>
+                <option value="3"
+                {% if type_water_body == "3" %}selected{% endif %}>
+                WETLAND
+                </option>
+            </select>
+            <select name="state_name" required style="width:100%;
+                padding:10px;
+                margin-top:10px;
+                margin-bottom:10px;">
+                <option value="" selected>Select State</option>
+                <option value="0"
+                {% if state_name == "0" %}selected{% endif %}>
+                ANDHRA PRADESH
+                </option>
+                <option value="1"
+                {% if state_name == "1" %}selected{% endif %}>
+                ASSAM
+                </option>
+                <option value="2"
+                {% if state_name == "2" %}selected{% endif %}>
+                BIHAR
+                </option>
+                <option value="3"
+                {% if state_name == "3" %}selected{% endif %}>
+                CHANDIGARH
+                </option>
+                <option value="4"
+                {% if state_name == "4" %}selected{% endif %}>
+                CHHATTISGARH
+                </option>
+                <option value="5"
+                {% if state_name == "5" %}selected{% endif %}>
+                GOA
+                </option>
+                <option value="6">GUJARAT</option>
+                <option value="7">HARYANA</option>
+                <option value="8">HIMACHAL PRADESH</option>
+                <option value="9">JAMMU & KASHMIR</option>
+                <option value="10">JHARKHAND</option>
+                <option value="11">KARNATAKA</option>
+                <option value="12">KERALA</option>
+                <option value="13">LAKSHADWEEP</option>
+                <option value="14">MADHYA PRADESH</option>
+                <option value="15">MANIPUR</option>
+                <option value="16">MEGHALAYA</option>
+                <option value="17">MIZORAM</option>
+                <option value="18">NAGALAND</option>
+                <option value="19">NCT OF DELHI</option>
+                <option value="20">ODISHA</option>
+                <option value="21">PUDUCHERRY</option>
+                <option value="22">PUNJAB</option>
+                <option value="23">RAJASTHAN</option>
+                <option value="24">SIKKIM</option>
+                <option value="27">TRIPURA</option>
+                <option value="28">UTTAR PRADESH</option>
+                <option value="29">UTTARAKHAND</option>
+                <option value="30">WEST BENGAL</option>
+            </select>
+            {% if error_message %}
+            <div class="error-message">
+                {{ error_message }}
+            </div>
+            {% endif %}
+           <label>🌡 Temperature (°C)</label>
+
+            <div class="value">
+                Current Value:
+                <span id="tempValue">{{ temperature }}</span> °C
+            </div>
+
+            <input type="range"
+                name="min_temperature"
+                min="0"
+                max="50"
+                value="{{ temperature }}"
+                oninput="tempValue.innerText=this.value">
+            <label>🧪 Dissolved Oxygen (mg/L)</label>
+            <div class="value">
+            Current Value:
+            <span id="doValue">{{ do }}</span> mg/L
+            </div>
+            <input
+            type="range"
+            name="min_dissolved_oxygen"
+            min="0"
+            max="15"
+            value="{{ do }}"
+            oninput="doValue.innerText=this.value">
+            <label>🔬 pH</label>
+            <div class="value">
+            Current Value:
+            <span id="phValue">{{ ph }}</span>
+            </div>
+            <input
+            type="range"
+            name="min_ph"
+            min="0"
+            max="14"
+            value="{{ ph }}"
+            step="0.1"
+            oninput="phValue.innerText=this.value">
+            <label>🧪 BOD (mg/L)</label>
+            <div class="value">
+            Current Value:
+            <span id="bodValue">{{ bod }}</span> mg/L
+            </div>
+            <input
+            type="range"
+            name="min_bod"
+            min="0"
+            max="10"
+            value="{{ bod }}"
+            step="0.1"
+            oninput="bodValue.innerText=this.value">
+            <label>🌧 Rainfall (mm)</label>
+            <div class="value">
+            Current Value:
+            <span id="rainValue">{{ rainfall }}</span> mm
+            </div>
+            <input
+            type="range"
+            name="rainfall"
+            min="0"
+            max="500"
+            value="{{ rainfall }}"
+            oninput="rainValue.innerText=this.value">
+
+            <div class="button-group">
+            <button type="submit">
+                Predict Risk
+            </button>
+
+            <button type="button" onclick="resetForm()" class="reset-btn">
+                Reset
+            </button>
+            </div>
+
+            </form>
+
+            </div>
+
+           {% if prediction_text %}
+
+            <div class="right-panel">
+
+            <div class="result">
+
+                {% if "HIGH" in prediction_text %}
+                <h2 class="result-high">🔴 HIGH RISK</h2>
+
+                {% elif "MEDIUM" in prediction_text %}
+                    <h2 class="result-medium">🟡 MEDIUM RISK</h2>
+
+                {% else %}
+                    <h2 class="result-low">🟢 LOW RISK</h2>
+                {% endif %}
+
+                <p class="timestamp">
+                🕒 Generated on: {{ current_time }}
+                </p>
+
+                <div class="disease-box">
+                    <strong>🦠 Possible Diseases:</strong>
+                    {{ disease_text }}
+                </div>
+
+                <div class="quality-box">
+                <h3>💧 Water Quality Status</h3>
+
+                <p>
+                    Temperature:
+                    {% if temperature|float <= 35 %}
+                        Good ✅
+                    {% else %}
+                        High ⚠️
+                    {% endif %}
+                </p>
+
+                <p>
+                    Dissolved Oxygen:
+                    {% if do|float >= 5 %}
+                        Excellent ✅
+                    {% else %}
+                        Low ⚠️
+                    {% endif %}
+                </p>
+
+                <p>
+                    pH:
+                    {% if ph|float >= 6.5 and ph|float <= 8.5 %}
+                        Acceptable ✅
+                    {% else %}
+                        Unsafe ⚠️
+                    {% endif %}
+                </p>
+
+                <p>
+                    BOD:
+                    {% if bod|float <= 3 %}
+                        Good ✅
+                    {% else %}
+                        Polluted ⚠️
+                    {% endif %}
+                </p>
+
+                <p>
+                    Rainfall:
+                    {% if rainfall|float <= 300 %}
+                        Normal ✅
+                    {% else %}
+                        Heavy ⚠️
+                    {% endif %}
+                </p>
+                </div>
+                <div class="recommendation-box">
+                <h3>🏥 Health Recommendations</h3>
+
+                {% if "HIGH" in prediction_text %}
+                    <ul>
+                        <li>Boil water before drinking</li>
+                        <li>Avoid untreated water sources</li>
+                        <li>Improve sanitation practices</li>
+                        <li>Seek medical attention if symptoms appear</li>
+                    </ul>
+
+                {% elif "MEDIUM" in prediction_text %}
+                    <ul>
+                        <li>Use filtered drinking water</li>
+                        <li>Monitor water quality regularly</li>
+                        <li>Avoid stagnant water sources</li>
+                        <li>Maintain proper hygiene</li>
+                    </ul>
+
+                {% else %}
+                    <ul>
+                        <li>Continue current safe practices</li>
+                        <li>Maintain clean surroundings</li>
+                        <li>Periodically test water quality</li>
+                        <li>Stay aware during rainy seasons</li>
+                    </ul>
+                {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+        {% endif %}
+        </div>   
+
+<div class="footer">
+    MCA Final Year Project | 2026 <br>
+    AI-Based Waterborne Disease Risk Prediction using Machine Learning
+</div>
+
+</div>
+
+<script>
+function resetForm() {
+
+    document.querySelector('[name="type_water_body"]').selectedIndex = 0;
+    document.querySelector('[name="state_name"]').selectedIndex = 0;
+
+    document.querySelector('[name="min_temperature"]').value = 0;
+    document.querySelector('[name="min_dissolved_oxygen"]').value = 0;
+    document.querySelector('[name="min_ph"]').value = 0;
+    document.querySelector('[name="min_bod"]').value = 0;
+    document.querySelector('[name="rainfall"]').value = 0;
+
+    document.getElementById("tempValue").innerText = 0;
+    document.getElementById("doValue").innerText = 0;
+    document.getElementById("phValue").innerText = 0;
+    document.getElementById("bodValue").innerText = 0;
+    document.getElementById("rainValue").innerText = 0;
+
+    window.location.href = "/";
+}
+</script>
+
+</body>
+
+</html>
