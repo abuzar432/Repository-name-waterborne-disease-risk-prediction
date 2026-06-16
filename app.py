@@ -3,7 +3,7 @@ from datetime import datetime
 import pickle
 import numpy as np
 
-with open("C:\\AIML waterbourne project\\waterborne_model.pkl", "rb") as file:
+with open("waterborne_model.pkl", "rb") as file:
     model = pickle.load(file)
 
 app = Flask(__name__)
