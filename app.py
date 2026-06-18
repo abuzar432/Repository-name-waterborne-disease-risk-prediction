@@ -3,7 +3,14 @@ from datetime import datetime
 import pickle
 import numpy as np
 
-with open("waterborne_model.pkl", "rb") as file:
+import os
+
+model_path = os.path.join(
+    os.path.dirname(__file__),
+    "waterborne_model.pkl"
+)
+
+with open(model_path, "rb") as file:
     model = pickle.load(file)
 
 app = Flask(__name__)
@@ -41,17 +48,21 @@ def predict():
     100,     # conductivity
     float(request.form['min_bod']),
     0.5,     # nitrate
-    300,     # fecal coliform
+    50,     # fecal coliform
     400,     # total coliform
     2022,    # year
-    60,      # toilet access
-    40,      # open defecation
+    90,      # toilet access
+    10,      # open defecation
     float(request.form['rainfall'])
 ]
 
     final_features = np.array(features).reshape(1, -1)
 
+    print("Features Sent:", final_features)
+
     prediction = model.predict(final_features)
+
+    print("Prediction:", prediction)
 
     predicted_label = prediction[0]
 
