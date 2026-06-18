@@ -54,6 +54,16 @@ The system predicts whether a water source falls under LOW, MEDIUM, or HIGH risk
 * SDG 3: Good Health and Well-being
 * SDG 6: Clean Water and Sanitation
 
+## Live Demo
+
+Application URL:
+
+https://repository-name-waterborne-disease-risk-prediction.onrender.com
+
+## GitHub Repository
+
+https://github.com/abuzar432/Repository-name-waterborne-disease-risk-prediction
+
 ## Author
 
 Mohammed Abuzar
