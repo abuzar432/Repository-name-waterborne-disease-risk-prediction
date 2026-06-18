@@ -58,7 +58,7 @@ The system predicts whether a water source falls under LOW, MEDIUM, or HIGH risk
 
 Application URL:
 
-https://repository-name-waterborne-disease-risk-prediction.onrender.com
+https://repository-name-waterborne-disease-risk.onrender.com
 
 ## GitHub Repository
 
